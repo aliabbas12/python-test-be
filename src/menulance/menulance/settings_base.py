@@ -182,8 +182,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "assets")]
 
 # Email settings
 DEFAULT_FROM_EMAIL = f"Menulance <no-reply@{APP_DOMAIN}"
-SERVER_EMAIL = "error@mytrafficdata2.com"
-EMAIL_SUBJECT_PREFIX = "[MyTrafficData 2]"
+SERVER_EMAIL = "error@menulance.com"
+EMAIL_SUBJECT_PREFIX = "[Menulance]"
 
 _EMAIL_BACKEND_CHOICES = {
     "smtp": "django.core.mail.backends.smtp.EmailBackend",
