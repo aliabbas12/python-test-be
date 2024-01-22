@@ -1,0 +1,10 @@
+volumes:
+  db_data:
+
+services:
+  db:
+    image: postgres:13.13-bullseye
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
