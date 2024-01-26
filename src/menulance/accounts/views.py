@@ -77,7 +77,7 @@ class UserViewSet(ModelViewSet):
     @swagger_auto_schema(
         methods=["POST"],
         request_body=no_body,
-        responses={200: "Email verification successful"},
+        responses={200: UserSerializer},
     )
     @action(
         detail=False,
