@@ -1,7 +1,7 @@
-import collections
 import typing
 import uuid
 from abc import ABCMeta, abstractmethod
+from collections.abc import Iterable
 from io import BytesIO
 
 import inflection
@@ -25,8 +25,8 @@ def camel_to_snake(data: typing.Any):
             else k: camel_to_snake(v)
             for k, v in data.items()
         }
-    if isinstance(data, collections.Iterable) and not isinstance(
-        data, six.string_types
+    if isinstance(data, Iterable) and not isinstance(
+            data, six.string_types
     ):
         return [camel_to_snake(item) for item in data]
     return data

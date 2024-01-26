@@ -1,5 +1,5 @@
-import collections
 import typing
+from collections.abc import Iterable
 
 import inflection
 import six
@@ -16,8 +16,8 @@ def snake_to_camel(data: typing.Any):
             else k: snake_to_camel(v)
             for k, v in data.items()
         }
-    if isinstance(data, collections.Iterable) and not isinstance(
-        data, six.string_types
+    if isinstance(data, Iterable) and not isinstance(
+            data, six.string_types
     ):
         return [snake_to_camel(item) for item in data]
     return data

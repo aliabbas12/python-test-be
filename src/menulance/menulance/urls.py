@@ -14,9 +14,27 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path
 
-urlpatterns = [
-    path("admin/", admin.site.urls),
-]
+urls_conf = None
+if settings.SERVICE_ID == "admin":
+    from menulance.admin import urls as admin_urls_conf
+
+    urls_conf = admin_urls_conf
+
+elif settings.SERVICE_ID == "api":
+    from menulance.api import urls as api_urls_conf
+
+    urls_conf = api_urls_conf
+
+urlpatterns = getattr(urls_conf, "urlpatterns", [])
+handler404 = getattr(urls_conf, "handler404", None)
+handler500 = getattr(urls_conf, "handler500", None)
+handler403 = getattr(urls_conf, "handler403", None)
+handler400 = getattr(urls_conf, "handler400", None)
+
+if settings.LOAD_ADMIN_APP:
+    urlpatterns += (path("admin/", admin.site.urls),)

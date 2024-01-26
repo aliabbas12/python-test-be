@@ -1,0 +1,14 @@
+{% load i18n %}
+
+{% blocktrans trimmed %}
+    <p>You're receiving this email because you have created a new account on {{ site_name }}.</p>
+{% endblocktrans %}
+
+<p>{% trans "Please go to the following page to complete the verification process:" %}</p>
+<p><a href="{{ verification_link }}">{{ verification_link }}</a></p>
+
+<p>{% blocktrans trimmed %}Thanks for using {{ site_name }}{% endblocktrans %}</p>
+
+<p>{% trans "Regards" %},</p>
+<p>{% blocktrans %}The {{ site_name }} team{% endblocktrans %}</p>
+

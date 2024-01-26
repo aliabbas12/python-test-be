@@ -21,17 +21,21 @@ def get_bool_env(key, default=None):
     return value.lower() == "true"
 
 
+# Some settings will be different if app is on docker
+IS_ON_DOCKER = get_bool_env("ON_DOCKER", False)
+
 # BASE DIRS
 resolved_file_path = Path(__file__).resolve()
 BASE_DIR = resolved_file_path.parent.parent
-MODULE_BASE_DIR = BASE_DIR.parent
-PROJECT_BASE_DIR = MODULE_BASE_DIR.parent
+PROJECT_BASE_DIR = BASE_DIR.parent.parent
 RUNTIME_HELPERS_DIR = os.path.join(BASE_DIR, "runtime_helpers")
 
 # Load dotenv files for standard .env files (not needed though)
-load_dotenv()
-# Load dotenv file for local non-docker development
-load_dotenv(os.path.join(PROJECT_BASE_DIR, "app.default.env"), override=True)
+
+if not IS_ON_DOCKER:
+    # Load dotenv file for local non-docker development
+    load_dotenv(os.path.join(PROJECT_BASE_DIR, "app.default.env"))
+    load_dotenv(".env-local", override=True)
 
 
 # Environment
@@ -85,7 +89,7 @@ if not ALLOWED_HOSTS and ENVIRONMENT == ServerEnvironment.DEV:
 # Allowed hosts injection without updating the main ALLOWED_HOSTS env variable
 ALLOWED_HOSTS_ADD = (
     []
-    if not os.environ.get("ALLOWED_HOSTS_ADD", None)
+    if not env("ALLOWED_HOSTS_ADD", None)
     else os.environ["ALLOWED_HOSTS_ADD"].split(",")
 )
 if ALLOWED_HOSTS_ADD:
@@ -93,16 +97,15 @@ if ALLOWED_HOSTS_ADD:
 
 # Application definition
 INSTALLED_APPS = [
+    # Menulance
+    "accounts",
     # Django Defaults
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
+    "django.contrib.postgres",
     "django.contrib.staticfiles",
     # Third Party
     "corsheaders",
-    # Menulance
 ]
 
 if DEBUG:
@@ -110,12 +113,8 @@ if DEBUG:
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
@@ -159,6 +158,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+# TODO: Logging
+
 # Internationalization and Localization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 LANGUAGE_CODE = "en-us"
@@ -169,7 +170,10 @@ USE_TZ = True
 
 # Figure out how to implement a CDN into media implementation
 MEDIA_ROOT = env(
-    "MEDIA_ROOT", os.path.join(os.path.dirname(PROJECT_BASE_DIR), "data", "media")
+    "MEDIA_ROOT",
+    os.path.join(os.path.dirname(PROJECT_BASE_DIR), "data", "media")
+    if not IS_ON_DOCKER
+    else "/var/www/data/media",
 )
 MEDIA_URL = "media/"
 
@@ -217,18 +221,25 @@ if _EMAIL_BACKEND_NAME == "smtp":
 ADMINS = [("Hassan Ahmed", "ahmed.hassan.112.ha@gmail.com")]
 
 # TODO: System info application
-# SYSTEM_DATA_ROOT = os.environ.get(
+# SYSTEM_DATA_ROOT = env(
 #     "SYSTEM_DATA_ROOT", os.path.join(os.path.dirname(BASE_DIR), "system")
 # )
+
+# Interfacing with frontend config
+FRONTEND_UI_BASE_URL = env("FRONTEND_UI_BASE_URL", "http://localhost:8000")
+FRONTEND_UI_VERIFY_EMAIL_PATH = env(
+    "FRONTEND_UI_VERIFY_EMAIL_URL", "/account/email-verification"
+)
 
 # TODO: Appropriate security middleware settings as needed
 # TODO: Appropriate CSP settings as needed
 # TODO: Sentry implementation
 
 """Other essential Configurations / Misc Configurations"""
-WSGI_APPLICATION = "menulance.wsgi.application"
+AUTH_USER_MODEL = "accounts.User"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ROOT_URLCONF = "menulance.urls"
+WSGI_APPLICATION = "menulance.wsgi.application"
 # Start shell plus with ipython by default
 SHELL_PLUS = "ipython"
 CREATOR_ATTRIBUTE_NAME = "creator"
@@ -243,12 +254,9 @@ if ALLOW_DJANGO_SHELL_PLUS:
         "--ip",
         "0.0.0.0",
         "--port",
-        os.environ.get("DJANGO_SHELL_PLUS_PORT", "8888"),
+        env("DJANGO_SHELL_PLUS_PORT", "8888"),
         "--allow-root",
     ]
-
-# TODO: Implement the suer model as needed by the applicaiton
-# AUTH_USER_MODEL = "accounts.User"
 
 # Load admin application?
 LOAD_ADMIN_APP = SERVICE_ID != "admin" and get_bool_env("LOAD_ADMIN_APP", False)

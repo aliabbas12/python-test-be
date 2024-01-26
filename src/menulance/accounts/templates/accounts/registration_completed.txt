@@ -1,0 +1,7 @@
+{% load i18n %}
+
+{% trans "Your account is ready to use!" %}
+
+{% trans "Thanks for using our site!" %}
+
+{% blocktrans %}The {{ site_name }} team{% endblocktrans %}

@@ -260,3 +260,4 @@ Temporary Items
 data/media/
 staticfiles/
 runtime_helpers/
+.env-local

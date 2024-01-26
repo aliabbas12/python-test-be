@@ -7,7 +7,7 @@ NOTEBOOK_ARGUMENTS = [
     "--ip",
     "0.0.0.0",
     "--port",
-    os.environ.get("NOTEBOOK_PORT", "8888"),
+    env("NOTEBOOK_PORT", "8888"),
     "--no-browser",
     "--NotebookApp.allow_password_change=False",
 ]
