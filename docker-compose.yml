@@ -17,8 +17,7 @@ services:
       dockerfile: Dockerfile
     image: menulance/backend
     entrypoint: /entrypoints/wait_for_db.sh
-    command:
-      - python manage.py runserver 0.0.0.0:8000
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     volumes:
       - ./src/menulance:/code
       - ./data:/var/www/data/
@@ -35,8 +34,7 @@ services:
   admin:
     image: menulance/backend
     entrypoint: /entrypoints/wait_for_db.sh
-    command:
-      - python manage.py runserver 0.0.0.0:8000
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     volumes:
       - ./src/menulance:/code
       - ./data:/var/www/data/
@@ -52,9 +50,9 @@ services:
 
   notebook:
     image: menulance/backend
-    command: [ "python3", "manage.py", "shell_plus", "--notebook" ]
+    command: [ "python", "manage.py", "shell_plus", "--notebook" ]
     volumes:
-      - ./backend/src:/code
+      - ./src/menulance:/code
       - ./data:/var/www/data/
     depends_on:
       - db
@@ -64,3 +62,5 @@ services:
       SERVICE_ID: notebook
       DJANGO_ALLOW_ASYNC_UNSAFE: 1
       ALLOW_ROOT: 1
+    ports:
+      - "8688:8888"

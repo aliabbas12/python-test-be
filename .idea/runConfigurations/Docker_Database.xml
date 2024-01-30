@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Local Database" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile">
+  <configuration default="false" name="Docker Database" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile">
     <makefile filename="C:\Users\Hassan\Desktop\work\menulance\menulance-be\Makefile" target="docker-run-db" workingDirectory="C:\Users\Hassan\Desktop\work\menulance\menulance-be" arguments="">
       <envs />
     </makefile>
