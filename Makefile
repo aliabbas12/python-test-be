@@ -1,5 +1,8 @@
 export DOCKER_BUILDKIT ?= 1
 
+# TODO: docker-run-staging function
+# TODO: Build static when run staging
+
 all: install
 install: docker-build-backend docker-migrate-database docker-setup-superuser
 run: docker-build-backend docker-migrate-database docker-run-all

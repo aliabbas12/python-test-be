@@ -1,0 +1,52 @@
+version: '2.4'
+
+services:
+  db:
+    env_file:
+      - ./deployment/.env.staging
+
+  api:
+    command: [ "gunicorn", "menulance.wsgi:application", "--bind", "0.0.0.0:8000", "-t", "300" ]
+    env_file:
+      - ./deployment/.env.staging
+    expose:
+      - 8000
+
+  admin:
+    command: [ "gunicorn", "menulance.wsgi:application", "--bind", "0.0.0.0:8001" ]
+    env_file:
+      - ./deployment/.env.staging
+    expose:
+      - 8001
+
+
+  notebook:
+    command: [ "python3", "manage.py", "shell_plus", "--notebook" ]
+    env_file:
+      - ./deployment/.env.staging
+
+  nginx:
+    image: nginx:1.23.2-perl
+    depends_on:
+      - api
+      - admin
+    env_file:
+      - ./deployment/.env.staging
+    volumes:
+      - ./data:/var/www/data/
+      - ./src/menulance/staticfiles:/var/www/static/
+      - ./deployment/nginx-configs/nginx-base.conf:/etc/nginx/nginx.conf
+      - ./deployment/nginx-configs/nginx-secure-development.conf:/etc/nginx/templates/default.conf.template
+      - ./deployment/certs/certbot/www/:/var/www/certbot:ro
+      - ./deployment/certs/certbot/conf/:/etc/nginx/ssl/:ro
+    ports:
+      - '80:80'
+      - '443:443'
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./deployment/certs/certbot/www/:/var/www/certbot:rw
+      - ./deployment/certs/certbot/conf/:/etc/letsencrypt/:rw
+
+
+

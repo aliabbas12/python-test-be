@@ -40,7 +40,7 @@ if not IS_ON_DOCKER:
 # Environment
 class ServerEnvironment(str, enum.Enum):
     DEV = "dev"
-    STAGE = "stage"
+    STAGING = "staging"
     PRODUCTION = "production"
 
 
@@ -52,7 +52,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 if ENVIRONMENT == ServerEnvironment.DEV and not SECRET_KEY:
     SECRET_KEY = "django-insecure-this-key-is-unsafe!!!!"
 elif (
-    ENVIRONMENT in (ServerEnvironment.STAGE, ServerEnvironment.PRODUCTION)
+    ENVIRONMENT in (ServerEnvironment.STAGING, ServerEnvironment.PRODUCTION)
     and not SECRET_KEY
 ):
     raise ImproperlyConfigured(

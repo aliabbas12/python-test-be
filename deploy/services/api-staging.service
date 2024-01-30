@@ -1,0 +1,14 @@
+[Unit]
+Description=Secure Dev Server Docker Compose Service
+After=network.target
+
+[Service]
+Environment="API_STAGING=1"
+Restart=always
+RestartSec=3s
+# TODO: WorkingDirectory
+#WorkingDirectory=/root/
+ExecStart=/usr/bin/make docker-run-staging
+
+[Install]
+WantedBy=multi-user.target

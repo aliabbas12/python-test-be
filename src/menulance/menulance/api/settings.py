@@ -98,8 +98,8 @@ SWAGGER_SETTINGS = {
 }
 
 # django-cors-header settings
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = get_bool_env("CORS_ORIGIN_ALLOW_ALL", False)
 CORS_ALLOW_HEADERS = default_headers + ("content-disposition",)
 CORS_ALLOWED_ORIGINS = (
-        env("CORS_ALLOWED_ORIGINS", "http://localhost:8000") or "http://localhost:8000"
+    env("CORS_ALLOWED_ORIGINS", "http://localhost:8000") or "http://localhost:8000"
 ).split(",")
