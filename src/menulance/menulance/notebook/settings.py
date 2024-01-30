@@ -15,6 +15,7 @@ NOTEBOOK_ARGUMENTS = [
 if get_bool_env("ALLOW_ROOT", False):
     NOTEBOOK_ARGUMENTS.append("--allow-root")
 if DEBUG:
+    # 11
     NOTEBOOK_ARGUMENTS.append(
         "--NotebookApp.password='argon2:$argon2id$v=19$m=10240,t=10,p=8$jJ57sn8jo5JEmZPG2kCFow$dAmGRVOb80cJShCu43M0oA'"
     )

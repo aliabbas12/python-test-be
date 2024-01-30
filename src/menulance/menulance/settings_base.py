@@ -3,6 +3,7 @@ import logging
 import os
 from pathlib import Path
 
+import sentry_sdk
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
@@ -30,8 +31,6 @@ BASE_DIR = resolved_file_path.parent.parent
 PROJECT_BASE_DIR = BASE_DIR.parent.parent
 RUNTIME_HELPERS_DIR = os.path.join(BASE_DIR, "runtime_helpers")
 
-# Load dotenv files for standard .env files (not needed though)
-
 if not IS_ON_DOCKER:
     # Load dotenv file for local non-docker development
     load_dotenv(os.path.join(PROJECT_BASE_DIR, "app.default.env"))
@@ -39,7 +38,7 @@ if not IS_ON_DOCKER:
 
 
 # Environment
-class ServerEnvironment(enum.Enum):
+class ServerEnvironment(str, enum.Enum):
     DEV = "dev"
     STAGE = "stage"
     PRODUCTION = "production"
@@ -73,7 +72,6 @@ SERVICE_ID = env("SERVICE_ID", "api") or "api"
 # TODO: Self domain recognition
 APP_DOMAIN = env("APP_DOMAIN", "menulance.com") or "menulance.com"
 
-# TODO: This and CORS configuration in API settings
 # Allowed hosts
 ALLOWED_HOSTS = None if not env("ALLOWED_HOSTS") else env("ALLOWED_HOSTS").split(",")
 
@@ -233,7 +231,22 @@ FRONTEND_UI_VERIFY_EMAIL_PATH = env(
 
 # TODO: Appropriate security middleware settings as needed
 # TODO: Appropriate CSP settings as needed
-# TODO: Sentry implementation
+
+# Sentry Configuration
+# TODO: Test
+SENTRY_DSN = env("SENTRY_DSN")
+FORCE_SENTRY_IN_DEBUG = get_bool_env("FORCE_SENTRY_IN_DEBUG", False)
+
+if SENTRY_DSN and (not DEBUG or FORCE_SENTRY_IN_DEBUG):
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        # Set traces_sample_rate to 1.0 to capture 100% of transactions for performance monitoring.
+        traces_sample_rate=1.0,
+        # Set profiles_sample_rate to 1.0 to profile 100% of sampled transactions.
+        # We recommend adjusting this value in production.
+        profiles_sample_rate=1.0,
+        environment=ENVIRONMENT.value,
+    )
 
 """Other essential Configurations / Misc Configurations"""
 AUTH_USER_MODEL = "accounts.User"

@@ -1,4 +1,4 @@
-FROM python:3.12.1-slim-bullseye as app
+FROM python:3.11.7-slim-bullseye as app
 ENV PYCURL_SSL_LIBRARY=openssl
 
 RUN apt-get update \
@@ -14,7 +14,7 @@ RUN apt-get update \
 
 ADD requirements.txt /root/.cache/
 RUN --mount=type=cache,id=menulance-pip,target=/root/.cache/pip pip cache list
-RUN --mount=type=cache,id=menulance-pip,target=/root/.cache/pip pip install -U wheel setuptools
+RUN --mount=type=cache,id=menulance-pip,target=/root/.cache/pip pip install -U wheel pip
 RUN --mount=type=cache,id=menulance-pip,target=/root/.cache/pip pip install -U uwsgi uwsgitop
 RUN --mount=type=cache,id=menulance-pip,target=/root/.cache/pip pip install -r /root/.cache/requirements.txt
 

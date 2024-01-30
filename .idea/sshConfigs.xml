@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="191.96.56.56" id="97db8d7c-6e64-4351-98b0-d5846e71eacb" keyPath="$USER_HOME$/.ssh/id_rsa" port="65002" customName="u299505604@geminititus.com" nameFormat="CUSTOM" username="u299505604" useOpenSSHConfig="true">
+        <option name="customName" value="u299505604@geminititus.com" />
+      </sshConfig>
+    </configs>
+  </component>
+</project>
