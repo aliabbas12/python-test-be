@@ -20,7 +20,9 @@ class CreatedAtUpdatedAtModelMixin(models.Model):
         null=False,
         default=timezone.now,
     )
-    updated_at = models.DateTimeField(verbose_name=_("Entity updated at"), null=True)
+    updated_at = models.DateTimeField(
+        verbose_name=_("Entity updated at"), null=True, blank=True
+    )
 
     class Meta:
         abstract = True

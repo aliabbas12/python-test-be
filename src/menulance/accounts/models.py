@@ -34,11 +34,16 @@ class User(
     email and password are required. Other fields are optional.
     """
 
-    email = models.EmailField(_("Email address"), unique=True)
+    email = models.EmailField(
+        _("Email address"),
+        unique=True,
+    )
 
     # technical fields
     date_email_verified = models.DateTimeField(
-        _("Date of email confirmation"), null=True, blank=True
+        _("Date of email confirmation"),
+        null=True,
+        blank=True,
     )
     is_active = models.BooleanField(
         _("Active"),
@@ -55,14 +60,24 @@ class User(
     )
 
     date_last_verification_email_sent = models.DateTimeField(
-        _("Date of last verification email"), null=True, blank=True
+        _("Date of last verification email"),
+        null=True,
+        blank=True,
     )
     # personal fields
     first_name = models.CharField(
-        _("First name"), validators=[basic_name_validator], max_length=150, null=True
+        _("First name"),
+        validators=[basic_name_validator],
+        max_length=150,
+        null=True,
+        blank=True,
     )
     last_name = models.CharField(
-        _("Last name"), validators=[basic_name_validator], max_length=150, null=True
+        _("Last name"),
+        validators=[basic_name_validator],
+        max_length=150,
+        null=True,
+        blank=True,
     )
 
     soft_delete_attributes = {"is_active": False}
