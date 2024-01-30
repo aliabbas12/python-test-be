@@ -15,6 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from accounts.managers import UserManager
 from accounts.utils import account_confirm_token_generator
 from utils.orm.model_mixins import CreatedAtUpdatedAtModelMixin, SoftDeletableModelMixin
+from utils.orm.validators import basic_name_validator
 
 
 class User(
@@ -57,8 +58,12 @@ class User(
         _("Date of last verification email"), null=True, blank=True
     )
     # personal fields
-    first_name = models.CharField(_("First name"), max_length=150, null=True)
-    last_name = models.CharField(_("Last name"), max_length=150, null=True)
+    first_name = models.CharField(
+        _("First name"), validators=[basic_name_validator], max_length=150, null=True
+    )
+    last_name = models.CharField(
+        _("Last name"), validators=[basic_name_validator], max_length=150, null=True
+    )
 
     soft_delete_attributes = {"is_active": False}
     EMAIL_FIELD = "email"
