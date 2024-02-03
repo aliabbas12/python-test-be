@@ -220,3 +220,64 @@ class User(
             using=using,
             update_fields=update_fields,
         )
+
+
+class UserPreferences(models.Model):
+    """
+    Class representing additional preferences and settings
+    for users in the application.
+    """
+
+    user = models.OneToOneField(
+        "accounts.User",
+        on_delete=models.CASCADE,
+        verbose_name='User'
+    )
+    font = models.ForeignKey(
+        "core.Font",
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name='Preferred Font',
+        help_text='Select the preferred font.'
+    )
+    font_size = models.IntegerField(
+        null=True,
+        verbose_name='Font Size',
+        help_text='Specify the preferred font size.'
+    )
+    ui_language = models.ForeignKey(
+        "core.Language",
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name='UI Language',
+        help_text='Choose the preferred language for the user interface.'
+    )
+    enable_wizard = models.BooleanField(
+        default=True,
+        verbose_name='Enable Wizard',
+        help_text='Toggle to enable or disable the user interface wizard.'
+    )
+    enable_pro_tips = models.BooleanField(
+        default=True,
+        verbose_name='Enable Pro Tips',
+        help_text='Toggle to display or hide pro tips in the user interface.'
+    )
+    enable_autodetect = models.BooleanField(
+        default=True,
+        verbose_name='Enable Autodetect',
+        help_text='Toggle to enable or disable auto detection feature.'
+    )
+    enable_soundfx = models.BooleanField(
+        default=True,
+        verbose_name='Enable Sound Effects',
+        help_text='Toggle to enable or disable sound effects in the application.'
+    )
+    enable_notifications = models.BooleanField(
+        default=True,
+        verbose_name='Enable Notifications',
+        help_text='Toggle to display or hide notifications.'
+    )
+
+    class Meta:
+        verbose_name = _("UserPreference")
+        verbose_name_plural = _("UserPreferences")
