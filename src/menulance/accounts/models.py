@@ -228,7 +228,7 @@ class UserPreferences(models.Model):
     for users in the application.
     """
 
-    user = models.OneToOneField(
+    creator = models.OneToOneField(
         "accounts.User",
         on_delete=models.CASCADE,
         verbose_name='User'
