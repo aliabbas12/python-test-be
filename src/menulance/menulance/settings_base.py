@@ -97,6 +97,7 @@ if ALLOWED_HOSTS_ADD:
 INSTALLED_APPS = [
     # Menulance
     "accounts",
+    "core",
     # Django Defaults
     "django.contrib.auth",
     "django.contrib.contenttypes",
