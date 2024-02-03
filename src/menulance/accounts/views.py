@@ -3,19 +3,20 @@ from django.utils import timezone
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from drf_yasg.utils import swagger_auto_schema, no_body
-from rest_framework import permissions, status, exceptions
+from rest_framework import permissions, status, exceptions, mixins
 from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from accounts.models import User
-from accounts.permissions import IsSuperUser
+from accounts.models import User, UserPreferences
+from accounts.permissions import IsSuperUser, IsAuthenticatedUserTheObjectCreator
 from accounts.serializers import (
     TokenPairSerializer,
     UserSerializer,
     UserRegistrationSerializer,
+    UserPreferencesSerializer
 )
 from accounts.utils import account_confirm_token_generator
 from utils.django_overrides import get_user_model
@@ -100,3 +101,9 @@ class UserViewSet(ModelViewSet):
         serializer.save(date_email_verified=timezone.now(), is_active=True)
         user.send_registration_completed_email()
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class UserPreferencesViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, GenericViewSet):
+    queryset = UserPreferences.objects.all()
+    serializer_class = UserPreferencesSerializer
+    permission_classes = [IsAuthenticatedUserTheObjectCreator]
+    http_method_names = ['get', 'put']

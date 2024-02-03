@@ -9,6 +9,7 @@ app_name = "accounts"
 
 router = routers.DefaultRouter()
 router.register(r"users", views.UserViewSet)
+router.register(r"user-preferences", views.UserPreferencesViewSet)
 
 # Wire up our API using automatic URL routing.
 urlpatterns = [

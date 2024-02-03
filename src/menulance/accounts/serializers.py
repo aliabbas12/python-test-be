@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from accounts.jwt_token_claims import JwtClaims
-from accounts.models import User
+from accounts.models import User, UserPreferences
 
 
 class TokenPairSerializer(TokenObtainPairSerializer):
@@ -69,3 +69,24 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data: dict):
         validated_data.pop("password2")
         return self.Meta.model.objects.create_user(**validated_data)
+
+
+class UserPreferencesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserPreferences
+        fields = [
+            "id",
+            "creator",
+            "font",
+            "font_size",
+            "ui_language",
+            "enable_wizard",
+            "enable_pro_tips",
+            "enable_autodetect",
+            "enable_soundfx",
+            "enable_notifications"
+        ]
+        read_only_fields = [
+            "id",
+            "creator"
+        ]
