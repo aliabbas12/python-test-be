@@ -26,7 +26,7 @@ class MenulanceTokenObtainPairView(TokenObtainPairView):
 
 
 class UserViewSet(ModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.filter(is_being_deleted=False)
     serializer_class = UserSerializer
     permission_classes = [IsSuperUser]
 
