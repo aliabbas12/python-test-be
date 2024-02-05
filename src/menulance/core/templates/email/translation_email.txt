@@ -1,0 +1,23 @@
+{% load i18n %}
+{% if updated %}
+{% blocktrans trimmed %}
+    You're receiving this email because you have updated a translation on {{ site_name }}.
+{% endblocktrans %}
+{% else %}
+{% blocktrans trimmed %}
+    You're receiving this email because you have created a new translation on {{ site_name }}.
+{% endblocktrans %}
+{% endif %}
+
+{% trans "Your word:" %}
+{{ original_word }}
+{% trans "Translation:" %}
+{{ translated_text }}
+
+{% trans "Original text in:" %}
+{{ from_language }}
+{% trans "Tanslated to:" %}
+{{ to_language }}
+
+{% trans "Regards" %},
+{% blocktrans %}The {{ site_name }} team{% endblocktrans %}
