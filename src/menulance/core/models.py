@@ -1,9 +1,8 @@
 from django.db import models
 from django.template.loader import render_to_string
-from django.utils.translation import gettext_lazy as _
-
 from accounts.models import User
 from utils.orm.model_mixins import CreatedAtUpdatedAtModelMixin
+from django.utils.translation import gettext_lazy as _
 
 
 class Font(CreatedAtUpdatedAtModelMixin):
@@ -55,3 +54,39 @@ class ManuallyTranslatedWord(CreatedAtUpdatedAtModelMixin):
             message=text_content,
             html_message=html_content,
         )
+
+
+class TranslationCard(models.Model):
+    """
+    Class representing a translation card
+    """
+
+    creator = models.OneToOneField(
+        "accounts.User",
+        on_delete=models.CASCADE,
+        verbose_name='Created By'
+    )
+    from_language = models.ForeignKey(
+        "core.Language",
+        on_delete=models.CASCADE,
+        verbose_name='From Language',
+        help_text='The language from which the text is translated.',
+        related_name='translationcards_from'
+    )
+    to_language = models.ForeignKey(
+        "core.Language",
+        on_delete=models.CASCADE,
+        verbose_name='From Language',
+        help_text='The language to which the text is translated.',
+        related_name='translationcards_to'
+    )
+    original_text = models.TextField(
+        _('Original Text')
+    )
+    translated_text = models.TextField(
+        _('Translated Text')
+    )
+
+    class Meta:
+        verbose_name = _("TranslationCard")
+        verbose_name_plural = _("TranslationCards")
