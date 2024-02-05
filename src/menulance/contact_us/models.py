@@ -14,10 +14,14 @@ class ContactFormEntry(CreatedAtUpdatedAtModelMixin):
         _("Last name"), max_length=50, validators=[basic_name_validator]
     )
     message = models.TextField(_("Message"))
-    created_by = models.ForeignKey(
+    creator = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
-        verbose_name=_("Created By"),
+        verbose_name=_("Creator"),
         null=True,
         blank=True,
     )
+
+    class Meta:
+        verbose_name = "ContactFormEntry"
+        verbose_name_plural = "ContactFormEntries"

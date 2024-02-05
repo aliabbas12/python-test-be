@@ -5,8 +5,7 @@ from contact_us.models import ContactFormEntry
 class ContactFormEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactFormEntry
-        fields = ["email", "first_name", "last_name", "message", "created_by"]
-        read_only_fields = ["created_by"]
+        fields = ["email", "first_name", "last_name", "message"]
 
     def create(self, validated_data):
         creator = None
