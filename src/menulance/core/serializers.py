@@ -1,7 +1,5 @@
 from rest_framework import serializers
-from core.models import Font, Language, ManuallyTranslatedWord
-from accounts.models import User
-from django.utils import timezone
+from core.models import Font, Language, ManuallyTranslatedWord, TranslationCard
 from rest_framework import exceptions
 
 
@@ -61,3 +59,24 @@ class ManuallyTranslatedWordSerializer(serializers.ModelSerializer):
         instance = super().update(instance, validated_data)
         instance.send_email_to_creator(updated=True)
         return instance
+
+class TranslationCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TranslationCard
+        fields = [
+            "id",
+            "creator",
+            "from_language",
+            "to_language",
+            "original_text",
+            "translated_text"
+        ]
+        read_only_fields = [
+            "creator",
+            "id"
+        ]
+
+
+class TokenizeSentenceSerializer(serializers.Serializer):
+    sentence = serializers.CharField()
+    language_code = serializers.IntegerField()
