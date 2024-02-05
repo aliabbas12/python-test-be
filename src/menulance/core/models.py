@@ -9,10 +9,24 @@ from utils.orm.model_mixins import CreatedAtUpdatedAtModelMixin
 class Font(CreatedAtUpdatedAtModelMixin):
     name = models.CharField(max_length=32, unique=True)
 
+    class Meta:
+        verbose_name = "Font"
+        verbose_name_plural = "Fonts"
+
+    def __str__(self):
+        return self.name
+
 
 class Language(CreatedAtUpdatedAtModelMixin):
     name = models.CharField(max_length=64)
     short_code = models.CharField(max_length=32, unique=True)
+
+    class Meta:
+        verbose_name = "Language"
+        verbose_name_plural = "Languages"
+
+    def __str__(self):
+        return self.short_code
 
 
 class ManuallyTranslatedWord(CreatedAtUpdatedAtModelMixin):
@@ -24,19 +38,21 @@ class ManuallyTranslatedWord(CreatedAtUpdatedAtModelMixin):
     to_language = models.ForeignKey(
         Language, on_delete=models.CASCADE, related_name="manual_translations_to"
     )
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = [
             "original_word",
             "from_language",
             "to_language",
-            "created_by",
+            "creator",
         ]
+        verbose_name = "ManuallyTranslatedWord"
+        verbose_name_plural = "ManuallyTranslatedWord"
 
     @property
     def _creator_email(self):
-        return self.created_by.email
+        return self.creator.email
 
     def send_email_to_creator(self, updated=False):
         context = {
@@ -50,7 +66,7 @@ class ManuallyTranslatedWord(CreatedAtUpdatedAtModelMixin):
         text_content = render_to_string("email/translation_email.txt", context)
         html_content = render_to_string("email/translation_email.html", context)
 
-        self.created_by.email_user(
+        self.creator.email_user(
             subject=_("Your translation has been saved!"),
             message=text_content,
             html_message=html_content,

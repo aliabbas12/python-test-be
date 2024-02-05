@@ -26,10 +26,9 @@ class ManuallyTranslatedWordSerializer(serializers.ModelSerializer):
             "from_language",
             "translated_text",
             "to_language",
-            "created_by",
             "created_at",
         ]
-        read_only_fields = ["created_at", "created_by"]
+        read_only_fields = ["created_at"]
 
     def create(self, validated_data):
         # TODO: requires permissions to be set to be tested
@@ -42,19 +41,19 @@ class ManuallyTranslatedWordSerializer(serializers.ModelSerializer):
         ):
             raise exceptions.PermissionDenied()
 
-        validated_data["created_by"] = request.user
+        validated_data["creator"] = request.user
 
         instance = super().create(validated_data)
         instance.send_email_to_creator()
         return instance
 
-    def update(self, instance: ManuallyTranslatedWord, validated_data)
+    def update(self, instance: ManuallyTranslatedWord, validated_data):
         # TODO: requires permissions to be set to be tested
         request = self.context.get("request")
         if (
                 request
                 and hasattr(request, "user")
-                and instance.created_by != request.user
+                and instance.creator != request.user
         ):
             raise exceptions.PermissionDenied()
 
