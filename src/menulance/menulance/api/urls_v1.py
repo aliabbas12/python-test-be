@@ -5,4 +5,5 @@ app_name = "v1"
 # TODO: System and git info
 urlpatterns = [
     path("accounts/", include("accounts.urls", "accounts")),
+    path("core/", include("core.urls", "core"))
 ]
