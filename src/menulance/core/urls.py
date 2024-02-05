@@ -7,9 +7,9 @@ app_name = "core"
 router = routers.DefaultRouter()
 router.register(r"fonts", views.FontViewSet)
 router.register(r"languages", views.LanguageViewSet)
+# TODO: change underscore to dash
 router.register(r"translated_words", views.ManuallyTranslatedWordViewSet)
 
-# Wire up our API using automatic URL routing.
 urlpatterns = [
     path("", include(router.urls)),
 ]

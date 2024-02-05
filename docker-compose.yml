@@ -62,5 +62,6 @@ services:
       SERVICE_ID: notebook
       DJANGO_ALLOW_ASYNC_UNSAFE: 1
       ALLOW_ROOT: 1
+      ON_DOCKER: 1
     ports:
       - "8688:8888"

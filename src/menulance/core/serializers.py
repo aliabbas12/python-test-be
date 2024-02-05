@@ -9,26 +9,13 @@ from django.utils import timezone
 class FontSerializer(serializers.ModelSerializer):
     class Meta:
         model = Font
-        fields = [
-            "id",
-            "name"
-        ]
-        read_only_fields = [
-            "id"
-        ]
+        fields = ["id", "name"]
 
 
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Language
-        fields = [
-            "id",
-            "name",
-            "short_code"
-        ]
-        read_only_fields = [
-            "id"
-        ]
+        fields = ["id", "name", "short_code"]
 
 
 class ManuallyTranslatedWordSerializer(serializers.ModelSerializer):
@@ -41,21 +28,21 @@ class ManuallyTranslatedWordSerializer(serializers.ModelSerializer):
             "translated_text",
             "to_language",
             "created_by",
-            "created_at"
+            "created_at",
         ]
         read_only_fields = [
-            "id",
             "created_at"
+            #     TODO: Created_by
         ]
 
-        def create(self, validated_data):
-            instance: ManuallyTranslatedWord = ManuallyTranslatedWord.objects.create(**validated_data)
-            instance.send_email_to_creator()
-            print("created")
-            return instance
+    def create(self, validated_data):
+        instance: ManuallyTranslatedWord = ManuallyTranslatedWord.objects.create(
+            **validated_data
+        )
+        instance.send_email_to_creator()
+        return instance
 
-        def update(self, instance: ManuallyTranslatedWord, validated_data):
-            instance.update(**validated_data, updated_at=timezone.now())
-            instance.send_email_to_creator(updated=True)
-            print("updated")
-            return instance
+    def update(self, instance: ManuallyTranslatedWord, validated_data):
+        super().update(instance, validated_data)
+        instance.send_email_to_creator(updated=True)
+        return instance
