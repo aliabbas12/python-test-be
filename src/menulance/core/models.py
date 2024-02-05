@@ -42,9 +42,9 @@ class ManuallyTranslatedWord(CreatedAtUpdatedAtModelMixin):
         context = {
             "site_name": "Menulance",
             "original_word": self.original_word,
-            "from_language": self.from_language,
+            "from_language": self.from_language.name,
             "translated_text": self.translated_text,
-            "to_language": self.to_language,
+            "to_language": self.to_language.name,
             "updated": updated,
         }
         text_content = render_to_string("email/translation_email.txt", context)
