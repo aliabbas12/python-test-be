@@ -10,8 +10,12 @@ class ContactFormEntrySerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         creator = None
-        request = self.context.get("request")
-        if request and hasattr(request, "user"):
+        if (
+            self.context.get("request")
+            and hasattr(request, "user")
+            and hasattr(request.user, "is_anonymous")
+            and not request.user.is_anonymous
+        ):
             creator = request.user
 
         validated_data["created_by"] = creator
